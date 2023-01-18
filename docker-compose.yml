@@ -18,13 +18,18 @@ services:
   whoami:
     # A container that exposes an API to show its IP address
     image: traefik/whoami
+    container_name: whoami
     labels:
-      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
 
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: frontend
     ports:
       - 5173:5173
     volumes:
-      - ./:/app
+      - ./src:/app/src
+    labels:
+      - "traefik.http.routers.frontend.rule=Host(`app.localhost`)"
